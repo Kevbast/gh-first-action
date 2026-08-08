@@ -1,0 +1,19 @@
+name: Output Event Details on issues
+
+on: issues
+
+jobs:
+  output-info:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+      - name: Output event details
+        run: |
+          echo "=== Datos rápidos del Issue ==="
+          echo "Acción: ${{ github.event.action }}"
+          echo "Título del issue: ${{ github.event.issue.title }}"
+          echo "Autor: ${{ github.actor }}"
+          
+          echo "=== Payload completo del evento (JSON) ==="
+          echo "${{ toJSON(github.event) }}"
