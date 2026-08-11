@@ -28,7 +28,7 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     outputs:
-      script-file: ${{ steps.publish-js-filename.outputs.script-file }}
+      scriptFile: ${{ steps.publish-js-filename.outputs.scriptFile }}
     steps:
       - name: Get code
         uses: actions/checkout@v4
@@ -46,7 +46,7 @@ jobs:
         working-directory: './Jobs & Artifacts'
       - name: Publish JS filename
         id: publish-js-filename
-        run: find dist/assets/*.js -type f -execdir echo 'script-file={}' >>$GITHUB_OUTPUT ';'
+        run: find dist/assets/*.js -type f -execdir echo 'scriptFile={}' >>$GITHUB_OUTPUT ';'
         working-directory: './Jobs & Artifacts'
       - name: Build artifacts
         uses: actions/upload-artifact@v4
@@ -64,6 +64,6 @@ jobs:
       - name: Output contents of dist folder
         run: ls -R
       - name: Output Filename of JS file
-        run: echo "JS file: ${{ needs.build.outputs.script-file }}"
+        run: echo "JS file: ${{ needs.build.outputs.scriptFile }}"
       - name: Deploy
         run: echo "Deploying..."
