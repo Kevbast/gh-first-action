@@ -64,6 +64,6 @@ jobs:
       - name: Output contents of dist folder
         run: ls -R
       - name: Output Filename of JS file
-        run: echo "JS file: ${{ needs.build.outputs.scriptFile }}"
+        run: echo "${{ needs.build.outputs.scriptFile }}"
       - name: Deploy
         run: echo "Deploying..."
