@@ -8,70 +8,59 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Load & Cache Dependencies
         id: cache
         uses: ./.github/workflows/cached-deps
       - name: Lint code
         run: npm run lint
         working-directory: "Composite-Actions"
+
   test:
     runs-on: ubuntu-latest
     steps:
       - name: Get code
-        uses: actions/checkout@v3
-      - name: Cache dependencies
+        uses: actions/checkout@v4
+      - name: Load & Cache Dependencies
         id: cache
-        uses: actions/cache@v3
-        with:
-          path: Composite-Actions/node_modules
-          key: deps-node-modules-${{ hashFiles('Composite-Actions/package-lock.json') }}
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci
-        working-directory: "Composite-Actions"
+        uses: ./.github/workflows/cached-deps
       - name: Test code
         id: run-tests
         run: npm run test
         working-directory: "Composite-Actions"
       - name: Upload test report
         if: failure() && steps.run-tests.outcome == 'failure'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-report
           path: Composite-Actions/test.json
+
   build:
     needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Get code
-        uses: actions/checkout@v3
-      - name: Cache dependencies
+        uses: actions/checkout@v4
+      - name: Load & Cache Dependencies
         id: cache
-        uses: actions/cache@v3
-        with:
-          path: Composite-Actions/node_modules
-          key: deps-node-modules-${{ hashFiles('Composite-Actions/package-lock.json') }}
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: npm ci
-        working-directory: "Composite-Actions"
+        uses: ./.github/workflows/cached-deps
       - name: Build website
         run: npm run build
         working-directory: "Composite-Actions"
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dist-files
           path: Composite-Actions/dist
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Get code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Get build artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: dist-files
           path: ./dist
